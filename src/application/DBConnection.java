@@ -1,6 +1,11 @@
 package application;
 import java.awt.image.AreaAveragingScaleFilter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class DBConnection {
@@ -139,5 +144,68 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
+    public void updatePlayerStats(String username, int blueEssenceEarned) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            String sql = "UPDATE Player " +
+                         "SET player_level = player_level + 1, " +
+                         "blue_essence = blue_essence + ? " +
+                         "WHERE username = ?";
+    
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, blueEssenceEarned);
+            stmt.setString(2, username);
+            stmt.executeUpdate();
+        }
+    }
+    public int createMatch(String gameMode, int gameLength) throws SQLException {
+        int matchId = -1;
+        String sql = "INSERT INTO MatchHistory (match_date, game_mode, game_length) VALUES (NOW(), ?, ?)";
+    
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, gameMode);
+            stmt.setInt(2, gameLength);
+            stmt.executeUpdate();
+    
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                matchId = rs.getInt(1);
+            }
+        }
+    
+        return matchId;
+    }
+    
+    public int getPlayerIdByUsername(String username) throws SQLException {
+        int playerId = -1;
+        String sql = "SELECT player_id FROM Player WHERE username = ?";
+    
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+    
+            if (rs.next()) {
+                playerId = rs.getInt("player_id");
+            }
+        }
+    
+        return playerId;
+    }
+    
+    public void insertMatchParticipant(int matchId, int playerId, int rankAwarded, String winLoss, int kills, int deaths, int assists) throws SQLException {
+        String sql = "INSERT INTO MatchParticipant (match_id, player_id, rank_awarded, win_loss, kills, deaths, assists) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, matchId);
+            stmt.setInt(2, playerId);
+            stmt.setInt(3, rankAwarded);
+            stmt.setString(4, winLoss);
+            stmt.setInt(5, kills);
+            stmt.setInt(6, deaths);
+            stmt.setInt(7, assists);
+            stmt.executeUpdate();
+        }
+    }
 }
-
