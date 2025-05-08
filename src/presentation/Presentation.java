@@ -20,8 +20,6 @@ public class Presentation {
         frame.setSize(500, 300);
         frame.setTitle("GameDB");
 
-        //((PlayerPanel)panel).DisplayText();
-
         frame.setVisible(true);
     }
 
