@@ -4,8 +4,8 @@ USE GameDB;
 CREATE TABLE IF NOT EXISTS Player (
     player_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) UNIQUE NOT NULL,
-    player_level INT NOT NULL,
-    player_rank INT NOT NULL,
+    player_level INT NOT NULL DEFAULT 0,
+    player_rank INT NOT NULL DEFAULT 0,
     blue_essence INT NOT NULL DEFAULT 0
 );
 
