@@ -1,6 +1,0 @@
-CREATE TABLE Player (
-    player_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    level INT NOT NULL,
-    gold INT DEFAULT 0
-);

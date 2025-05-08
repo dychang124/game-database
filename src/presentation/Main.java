@@ -1,10 +1,8 @@
-package application.src.main.java.com.example;
-import java.sql.*;
-/**
- * Hello world!
- *
- */
-public class App 
+package presentation;
+import application.*;
+
+
+public class Main
 {
     public static void main( String[] args )
     {
