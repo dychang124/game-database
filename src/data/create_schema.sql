@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS MatchHistory (
     match_id INT PRIMARY KEY AUTO_INCREMENT,
     match_date DATETIME NOT NULL,
     game_mode VARCHAR(50) NOT NULL,
-    game_length DECIMAL(5, 2) NOT NULL
+    game_length INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS MatchParticipant (
