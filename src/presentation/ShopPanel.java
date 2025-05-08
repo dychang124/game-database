@@ -33,7 +33,6 @@ public class ShopPanel extends UIPanel{
         });
         this.add(backButton);
 
-
         RefreshShop();
     }
 

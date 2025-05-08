@@ -1,4 +1,5 @@
 package application;
+import java.awt.image.AreaAveragingScaleFilter;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -37,20 +38,22 @@ public class DBConnection {
         return id;
     }
 
-    public ArrayList<String> GetLeaderboard() throws SQLException{
+    public ArrayList<ArrayList<String>> GetLeaderboard() throws SQLException{
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM player ORDER BY player_rank DESC");
 
 
-            ArrayList<String> leaderboard = new ArrayList<>();
+            ArrayList<ArrayList<String>> leaderboard = new ArrayList<>();
 
             while (rs.next()) {
-                int level = rs.getInt("player_level");
                 String username = rs.getString("username");
-                String rank = rs.getString("player_rank");
+                int rank = rs.getInt("player_rank");
 
-                leaderboard.add((level + " " + username + " " + rank)) ;
+                ArrayList<String> temp = new ArrayList<>();
+                leaderboard.add(temp);
+                temp.add(username);
+                temp.add(rank + "");
             }
             return leaderboard;
         }
