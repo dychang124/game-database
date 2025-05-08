@@ -1,9 +1,12 @@
 package presentation;
 
-import application.DBConnection;
+import java.awt.Container;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
+import application.DBConnection;
 
 public class Presentation {
     private Container cp;
@@ -17,6 +20,8 @@ public class Presentation {
         JFrame frame = new JFrame();
         cp = frame.getContentPane();
         cp.add(panel);
+
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(500, 300);
         frame.setTitle("GameDB");
 
