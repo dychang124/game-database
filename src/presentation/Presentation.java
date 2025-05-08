@@ -1,6 +1,6 @@
 package presentation;
 
-import java.awt.Container;
+import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -27,7 +27,6 @@ public class Presentation {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(1000, 800);
         frame.setTitle("GameDB");
-
         frame.setVisible(true);
     }
 
