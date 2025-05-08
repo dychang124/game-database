@@ -43,7 +43,7 @@ public class PlayerPanel extends UIPanel {
         viewShop = new JButton("Open Shop");
         viewShop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                p.SwitchPanel(new OwnedChampionsPanel(p));
+                p.SwitchPanel(new ShopPanel(p));
             }
         });
         this.add(viewShop);

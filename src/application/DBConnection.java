@@ -71,6 +71,29 @@ public class DBConnection {
         }
     }
 
+    public ArrayList<StringIntTuple> GetUnOwnedChampions(int id) throws SQLException{
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+
+            String sql = "SELECT c.champion_name, c.price FROM Champion c LEFT JOIN ChampionsOwned co ON c.champion_name = co.champion_name AND co.player_id = ? WHERE co.player_id IS NULL";
+
+            PreparedStatement s = conn.prepareStatement(sql);
+            s.setInt(1, id);
+
+            ResultSet rs = s.executeQuery();
+
+            ArrayList<StringIntTuple> shop = new ArrayList<StringIntTuple>();
+
+            while (rs.next()) {
+                StringIntTuple t = new StringIntTuple(rs.getString("champion_name"), rs.getInt("price"));
+
+                shop.add(t) ;
+            }
+            return shop;
+        }
+    }
+
+
+
     public ArrayList<String> PurchaseChampion(String championName){
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
@@ -114,3 +137,4 @@ public class DBConnection {
         }
     }
 }
+
