@@ -9,7 +9,7 @@ public class ShopEntryPanel extends JPanel {
     public ShopEntryPanel(String championName, int cost) {
         super();
         this.setBackground(Color.gray);
-        this.setLayout(new FlowLayout());
+        this.setLayout(new GridLayout(1,2));
 
 
         JLabel championNameLabel = new JLabel(championName);

@@ -15,11 +15,13 @@ public class PlayerPanel extends UIPanel {
 
     private JButton viewShop;
 
+    private JButton logoutButton;
+
     public PlayerPanel(Presentation p)
     {
         super(p);
 
-        this.setLayout(new GridLayout(4,1));
+        this.setLayout(new GridLayout(7,1));
 
         this.username = new JLabel("Welcome, " + p.getUsername() + "!");
         this.add(this.username);
@@ -47,6 +49,16 @@ public class PlayerPanel extends UIPanel {
             }
         });
         this.add(viewShop);
+
+        logoutButton = new JButton("Log out");
+        logoutButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                p.setPlayer_id(-1);
+                p.setUsername(null);
+                p.SwitchPanel(new LoginPanel(p));
+            }
+        });
+        this.add(logoutButton);
     }
 
 }

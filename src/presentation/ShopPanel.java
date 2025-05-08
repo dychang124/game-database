@@ -20,10 +20,11 @@ public class ShopPanel extends UIPanel{
         this.setLayout(new GridLayout(3,1));
         ocTitleLabel = new JLabel("Shop");
         listPanel = new JPanel(new GridLayout(10,1));
-        this.add(listPanel);
-        listPanel.add(ocTitleLabel);
-        shopLabels = new ArrayList<ShopEntryPanel>();
 
+        this.add(ocTitleLabel);
+        this.add(listPanel);
+
+        shopLabels = new ArrayList<ShopEntryPanel>();
 
         backButton = new JButton("Back");
         backButton.addActionListener(new ActionListener() {
@@ -45,7 +46,7 @@ public class ShopPanel extends UIPanel{
             ArrayList<StringIntTuple> a = getMain().getDbc().GetUnOwnedChampions(getMain().getPlayer_id());
             for (int i = 0; i < a.size(); i++){
                 ShopEntryPanel label = new ShopEntryPanel(a.get(i).getStr(), a.get(i).getNum());
-                this.add(label);
+                listPanel.add(label);
             }
         }catch (SQLException e){
             e.printStackTrace();

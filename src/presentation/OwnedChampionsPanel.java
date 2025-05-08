@@ -17,9 +17,10 @@ public class OwnedChampionsPanel extends UIPanel{
 
         this.setLayout(new GridLayout(3,1));
         ocTitleLabel = new JLabel("Owned Champions");
-        listPanel = new JPanel(new GridLayout(10,1));
+        this.add(ocTitleLabel);
+
+        listPanel = new JPanel(new GridLayout(8,1));
         this.add(listPanel);
-        listPanel.add(ocTitleLabel);
         ocLabels = new ArrayList<JLabel>();
 
 
@@ -46,7 +47,7 @@ public class OwnedChampionsPanel extends UIPanel{
             ArrayList<String> a = getMain().getDbc().GetOwnedChampions(getMain().getPlayer_id());
             for (int i = 0; i < a.size(); i++){
                 JLabel label = new JLabel(a.get(i));
-                this.add(label);
+                listPanel.add(label);
             }
         }catch (SQLException e){
             e.printStackTrace();
