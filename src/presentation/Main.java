@@ -15,16 +15,7 @@ public class Main
         dbc.InsertPlayer("playerTwo");
         dbc.PrintPlayers();
 
-        JPanel panel = new PlayerPanel();
-        JFrame frame = new JFrame();
-        Container cp = frame.getContentPane();
-        cp.add(panel);
-        frame.setSize(500, 300);
-        frame.setTitle("GameDB");
-
-        ((PlayerPanel)panel).DisplayText();
-
-        frame.setVisible(true);
+        Presentation p = new Presentation();
     }
 
 }

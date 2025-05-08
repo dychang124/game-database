@@ -2,19 +2,15 @@ package presentation;
 
 import javax.swing.*;
 
-public class PlayerPanel extends JPanel {
+public class PlayerPanel extends UIPanel {
 
     private JLabel username;
 
-    public PlayerPanel()
+    public PlayerPanel(Presentation p, String username)
     {
-        super();
-        username = new JLabel();
-        this.add(username);
+        super(p);
+        this.username = new JLabel("Welcome, " + username + "!");
+        this.add(this.username);
     }
 
-    public void DisplayText() {
-        this.username.setText("Welcome ");
-        this.repaint();
-    }
 }
