@@ -51,26 +51,6 @@ public class PlayerPanel extends UIPanel {
             }
         });
         this.add(playButton);
-    }
-
-    private void startGame(String username)
-    {
-        kills = (int)(Math.random()*10);
-        deaths = (int)(Math.random()*10);
-        assists = (int)(Math.random()*10);
-        gametime = (int)(Math.random()*10000);
-        winLoss = kills > deaths ? "Win" : "Loss";
-        int rankAwarded = winLoss.equals("Win") ? 1 : -1;
-
-        try {
-            matchId = GetPresentation().getDbc().createMatch("Ranked Solo", gametime);
-            int playerId = GetPresentation().getDbc().getPlayerIdByUsername(username);
-            GetPresentation().getDbc().insertMatchParticipant(matchId, playerId, rankAwarded, winLoss, kills, deaths, assists);
-            System.out.println("Match and stats saved successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
 
         viewLeaderboard = new JButton("View Leaderboard");
         viewLeaderboard.addActionListener(new ActionListener() {
@@ -105,6 +85,28 @@ public class PlayerPanel extends UIPanel {
             }
         });
         this.add(logoutButton);
+    }
+
+    private void startGame(String username)
+    {
+        kills = (int)(Math.random()*10);
+        deaths = (int)(Math.random()*10);
+        assists = (int)(Math.random()*10);
+        gametime = (int)(Math.random()*10000);
+        winLoss = kills > deaths ? "Win" : "Loss";
+        int rankAwarded = winLoss.equals("Win") ? 1 : -1;
+
+        try {
+            matchId = GetPresentation().getDbc().createMatch("Ranked Solo", gametime);
+            int playerId = GetPresentation().getDbc().getPlayerIdByUsername(username);
+            GetPresentation().getDbc().insertMatchParticipant(matchId, playerId, rankAwarded, winLoss, kills, deaths, assists);
+            System.out.println("Match and stats saved successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 
 }
