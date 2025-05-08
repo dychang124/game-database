@@ -1,11 +1,18 @@
 package presentation;
 
+import application.DBConnection;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Presentation {
     private Container cp;
+    private DBConnection dbc;
+
     public Presentation(){
+
+        dbc = new DBConnection();
+
         JPanel panel = new LoginPanel(this);
         JFrame frame = new JFrame();
         cp = frame.getContentPane();
@@ -23,5 +30,9 @@ public class Presentation {
         cp.add(uip);
         cp.revalidate();
         cp.repaint();
+    }
+
+    public DBConnection getDbc() {
+        return dbc;
     }
 }
