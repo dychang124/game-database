@@ -11,13 +11,17 @@ public class PlayerPanel extends UIPanel {
 
     private JButton viewLeaderboard;
 
-    public PlayerPanel(Presentation p, String username)
+    private JButton viewChampionsOwned;
+
+    private JButton viewShop;
+
+    public PlayerPanel(Presentation p)
     {
         super(p);
 
-        this.setLayout(new GridLayout(2,1));
+        this.setLayout(new GridLayout(4,1));
 
-        this.username = new JLabel("Welcome, " + username + "!");
+        this.username = new JLabel("Welcome, " + p.getUsername() + "!");
         this.add(this.username);
 
         viewLeaderboard = new JButton("View Leaderboard");
@@ -27,6 +31,22 @@ public class PlayerPanel extends UIPanel {
             }
         });
         this.add(viewLeaderboard);
+
+        viewChampionsOwned = new JButton("Open Collection");
+        viewChampionsOwned.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                p.SwitchPanel(new OwnedChampionsPanel(p));
+            }
+        });
+        this.add(viewChampionsOwned);
+
+        viewShop = new JButton("Open Shop");
+        viewShop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                p.SwitchPanel(new OwnedChampionsPanel(p));
+            }
+        });
+        this.add(viewShop);
     }
 
 }

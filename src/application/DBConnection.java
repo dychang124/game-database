@@ -1,8 +1,6 @@
 package application;
-import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DBConnection {
     String url = "jdbc:mysql://localhost:3306/gamedb";
@@ -13,28 +11,30 @@ public class DBConnection {
         PrintPlayers();
     }
 
-    public void InsertPlayer(String Username) throws SQLException{
+    public int InsertPlayer(String Username) throws SQLException{
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "INSERT INTO player (username) VALUES (?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, Username);
             stmt.executeUpdate();
+
+            return 1;
         }
     }
 
-    public boolean TryLogin(String username) throws SQLException{
-        boolean userFound = false;
+    public int TryLogin(String username) throws SQLException{
+        int id = -1;
         try (Connection conn = DriverManager.getConnection(url, user, password)){
-            String sql = "SELECT * FROM player WHERE username = ?";
+            String sql = "SELECT player_id FROM player WHERE username = ?";
             PreparedStatement s = conn.prepareStatement(sql);
             s.setString(1, username);
             ResultSet rs = s.executeQuery();
 
             if (rs.next()) {
-                userFound = true;
+                id = rs.getInt("player_id");
             }
         }
-        return userFound;
+        return id;
     }
 
     public ArrayList<String> GetLeaderboard() throws SQLException{
@@ -53,6 +53,42 @@ public class DBConnection {
                 leaderboard.add((level + " " + username + " " + rank)) ;
             }
             return leaderboard;
+        }
+    }
+
+    public ArrayList<String> GetOwnedChampions(int id) throws SQLException{
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            Statement s = conn.createStatement();
+            ResultSet rs = s.executeQuery("SELECT champion_name FROM ChampionsOwned WHERE player_id = " + id);
+
+            ArrayList<String> owned = new ArrayList<>();
+
+            while (rs.next()) {
+                String champ = rs.getString("champion_name");
+                owned.add(champ) ;
+            }
+            return owned;
+        }
+    }
+
+    public ArrayList<String> PurchaseChampion(String championName){
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            Statement s = conn.createStatement();
+            ResultSet rs = s.executeQuery("SELECT * FROM player ORDER BY player_rank DESC");
+
+
+            ArrayList<String> leaderboard = new ArrayList<>();
+
+            while (rs.next()) {
+                int level = rs.getInt("player_level");
+                String username = rs.getString("username");
+                String rank = rs.getString("player_rank");
+
+                leaderboard.add((level + " " + username + " " + rank)) ;
+            }
+            return leaderboard;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

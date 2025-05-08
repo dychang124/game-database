@@ -12,6 +12,9 @@ public class Presentation {
     private Container cp;
     private DBConnection dbc;
 
+    private int player_id;
+    private String username;
+
     public Presentation(){
 
         dbc = new DBConnection();
@@ -22,7 +25,7 @@ public class Presentation {
         cp.add(panel);
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(500, 300);
+        frame.setSize(1000, 800);
         frame.setTitle("GameDB");
 
         frame.setVisible(true);
@@ -37,5 +40,21 @@ public class Presentation {
 
     public DBConnection getDbc() {
         return dbc;
+    }
+
+    public int getPlayer_id() {
+        return player_id;
+    }
+
+    public void setPlayer_id(int player_id) {
+        this.player_id = player_id;
+    }
+
+    public String getUsername(){
+        return username;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
     }
 }

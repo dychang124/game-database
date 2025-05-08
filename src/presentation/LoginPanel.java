@@ -22,14 +22,16 @@ public class LoginPanel extends UIPanel {
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String input = username.getText();
-                boolean hasUser = false;
+                int id = -1;
                 try {
-                    hasUser = getMain().getDbc().TryLogin(input);
+                    id = getMain().getDbc().TryLogin(input);
                 }catch (SQLException ex){
                     ex.printStackTrace();
                 }
-                if (hasUser) {
-                    p.SwitchPanel(new PlayerPanel(p, input));
+                if (id != -1) {
+                    p.setPlayer_id(id);
+                    p.setUsername(input);
+                    p.SwitchPanel(new PlayerPanel(p));
                 }else {
                     System.out.println("No user found");
                 }
@@ -43,10 +45,15 @@ public class LoginPanel extends UIPanel {
                 String input = username.getText();
                 try {
                     getMain().getDbc().InsertPlayer(input);
+
+                    //p.setPlayer_id(id);
+                    p.setUsername(input);
+                    p.SwitchPanel(new PlayerPanel(p));
+
                 }catch (SQLException ex){
                     ex.printStackTrace();
                 }
-                p.SwitchPanel(new PlayerPanel(p, input));
+
             }
         });
         this.add(registerButton);
