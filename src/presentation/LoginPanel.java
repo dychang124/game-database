@@ -39,7 +39,7 @@ public class LoginPanel extends UIPanel {
                 String input = username.getText();
                 int id = -1;
                 try {
-                    id = getMain().getDbc().TryLogin(input);
+                    id = GetPresentation().getDbc().TryLogin(input);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -61,7 +61,7 @@ public class LoginPanel extends UIPanel {
             public void actionPerformed(ActionEvent e) {
                 String input = username.getText();
                 try {
-                    getMain().getDbc().InsertPlayer(input);
+                    GetPresentation().getDbc().InsertPlayer(input);
                     p.setUsername(input);
                     p.SwitchPanel(new PlayerPanel(p));
 

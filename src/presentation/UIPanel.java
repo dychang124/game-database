@@ -10,7 +10,7 @@ public class UIPanel extends JPanel {
         this.p = p;
     }
 
-    public Presentation getMain() {
+    public Presentation GetPresentation() {
         return p;
     }
 }

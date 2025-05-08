@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -49,7 +48,7 @@ public class LeaderboardPanel extends UIPanel
         leaderboardLabels.add(temp);
 
         try {
-            ArrayList<ArrayList<String>> a = getMain().getDbc().GetLeaderboard();
+            ArrayList<ArrayList<String>> a = GetPresentation().getDbc().GetLeaderboard();
             for (int i = 0; i < a.size(); i++){
                 temp = new JLabel();
                 temp.setLayout(new GridLayout(1,2));

@@ -43,7 +43,7 @@ public class ShopPanel extends UIPanel{
         }
 
         try {
-            ArrayList<StringIntTuple> a = getMain().getDbc().GetUnOwnedChampions(getMain().getPlayer_id());
+            ArrayList<StringIntTuple> a = GetPresentation().getDbc().GetUnOwnedChampions(GetPresentation().getPlayer_id());
             for (int i = 0; i < a.size(); i++){
                 ShopEntryPanel label = new ShopEntryPanel(a.get(i).getStr(), a.get(i).getNum());
                 listPanel.add(label);

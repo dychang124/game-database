@@ -8,8 +8,6 @@ import javax.swing.JLabel;
 import java.lang.Math;
 import java.sql.SQLException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class PlayerPanel extends UIPanel {
 
@@ -27,7 +25,7 @@ public class PlayerPanel extends UIPanel {
 
     private JButton logoutButton;
 
-    public PlayerPanel(Presentation p, String username)
+    public PlayerPanel(Presentation p)
     {
         super(p);
 
@@ -40,7 +38,7 @@ public class PlayerPanel extends UIPanel {
         playButton = new JButton("Play");
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                startGame(username);
+                startGame(p.getUsername());
                 if(matchId != -1)
                 {
                     System.out.println("Game Over:");
@@ -65,9 +63,9 @@ public class PlayerPanel extends UIPanel {
         int rankAwarded = winLoss.equals("Win") ? 1 : -1;
 
         try {
-            matchId = getMain().getDbc().createMatch("Ranked Solo", gametime);
-            int playerId = getMain().getDbc().getPlayerIdByUsername(username);
-            getMain().getDbc().insertMatchParticipant(matchId, playerId, rankAwarded, winLoss, kills, deaths, assists);
+            matchId = GetPresentation().getDbc().createMatch("Ranked Solo", gametime);
+            int playerId = GetPresentation().getDbc().getPlayerIdByUsername(username);
+            GetPresentation().getDbc().insertMatchParticipant(matchId, playerId, rankAwarded, winLoss, kills, deaths, assists);
             System.out.println("Match and stats saved successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,7 +75,7 @@ public class PlayerPanel extends UIPanel {
         viewLeaderboard = new JButton("View Leaderboard");
         viewLeaderboard.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                p.SwitchPanel(new LeaderboardPanel(p));
+                GetPresentation().SwitchPanel(new LeaderboardPanel(GetPresentation()));
             }
         });
         this.add(viewLeaderboard);
@@ -85,7 +83,7 @@ public class PlayerPanel extends UIPanel {
         viewChampionsOwned = new JButton("Open Collection");
         viewChampionsOwned.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                p.SwitchPanel(new OwnedChampionsPanel(p));
+                GetPresentation().SwitchPanel(new OwnedChampionsPanel(GetPresentation()));
             }
         });
         this.add(viewChampionsOwned);
@@ -93,7 +91,7 @@ public class PlayerPanel extends UIPanel {
         viewShop = new JButton("Open Shop");
         viewShop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                p.SwitchPanel(new ShopPanel(p));
+                GetPresentation().SwitchPanel(new ShopPanel(GetPresentation()));
             }
         });
         this.add(viewShop);
@@ -101,9 +99,9 @@ public class PlayerPanel extends UIPanel {
         logoutButton = new JButton("Log out");
         logoutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                p.setPlayer_id(-1);
-                p.setUsername(null);
-                p.SwitchPanel(new LoginPanel(p));
+                GetPresentation().setPlayer_id(-1);
+                GetPresentation().setUsername(null);
+                GetPresentation().SwitchPanel(new LoginPanel(GetPresentation()));
             }
         });
         this.add(logoutButton);
