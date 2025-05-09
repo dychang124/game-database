@@ -88,7 +88,7 @@ public class PlayerPanel extends UIPanel {
         });
         this.add(viewShop);
 
-        logoutButton = new JButton("Log out");
+        logoutButton = new JButton("Log Out");
         logoutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //Log out and go to Login Panel on button click
@@ -126,9 +126,9 @@ public class PlayerPanel extends UIPanel {
     public void startMatch(){
         try {
             //Send request to backend
-            JOptionPane.showMessageDialog(usernameLabel, getPresentation().getDbc().playMatch(getPresentation().getPlayer_id()));
+            JOptionPane.showMessageDialog(this, getPresentation().getDbc().playMatch(getPresentation().getPlayer_id()));
         }catch (SQLException e){
-            JOptionPane.showMessageDialog(usernameLabel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         refreshProfileLabel();
     }
