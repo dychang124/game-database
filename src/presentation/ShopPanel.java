@@ -42,7 +42,7 @@ public class ShopPanel extends UIPanel{
         listPanel.removeAll();
 
         try {
-            ArrayList<StringIntTuple> a = GetPresentation().getDbc().GetUnOwnedChampions(GetPresentation().getPlayer_id());
+            ArrayList<StringIntTuple> a = GetPresentation().getDbc().getUnOwnedChampions(GetPresentation().getPlayer_id());
             for (int i = 0; i < a.size(); i++){
                 ShopEntryPanel label = new ShopEntryPanel(a.get(i).getStr(), a.get(i).getNum(), this);
                 listPanel.add(label);
@@ -58,7 +58,7 @@ public class ShopPanel extends UIPanel{
 
     public void SetBlueEssence(){
         try {
-            blueEssenceInventory.setText("BlueEssence: " + GetPresentation().getDbc().GetBlueEssence(GetPresentation().getPlayer_id()));
+            blueEssenceInventory.setText("BlueEssence: " + GetPresentation().getDbc().getBlueEssence(GetPresentation().getPlayer_id()));
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(ShopPanel.this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

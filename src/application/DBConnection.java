@@ -1,6 +1,5 @@
 package application;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -10,21 +9,19 @@ public class DBConnection {
     String password = "password";
 
     public DBConnection() {
-        PrintPlayers();
+        printPlayers();
     }
 
-    public int InsertPlayer(String Username) throws SQLException {
+    public void insertPlayer(String Username) throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "INSERT INTO player (username) VALUES (?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, Username);
             stmt.executeUpdate();
-
-            return 1;
         }
     }
 
-    public int TryLogin(String username) throws SQLException {
+    public int tryLogin(String username) throws SQLException {
         int id = -1;
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "SELECT player_id FROM player WHERE username = ?";
@@ -39,11 +36,10 @@ public class DBConnection {
         return id;
     }
 
-    public ArrayList<ArrayList<String>> GetLeaderboard() throws SQLException {
+    public ArrayList<ArrayList<String>> getLeaderboard() throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM player ORDER BY player_rank DESC");
-
 
             ArrayList<ArrayList<String>> leaderboard = new ArrayList<>();
 
@@ -60,7 +56,7 @@ public class DBConnection {
         }
     }
 
-    public ArrayList<String> GetOwnedChampions(int id) throws SQLException {
+    public ArrayList<String> getOwnedChampions(int id) throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT champion_name FROM ChampionsOwned WHERE player_id = " + id);
@@ -75,7 +71,7 @@ public class DBConnection {
         }
     }
 
-    public ArrayList<StringIntTuple> GetUnOwnedChampions(int id) throws SQLException {
+    public ArrayList<StringIntTuple> getUnOwnedChampions(int id) throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
 
             String sql = "SELECT c.champion_name, c.price FROM Champion c LEFT JOIN ChampionsOwned co ON c.champion_name = co.champion_name AND co.player_id = ? WHERE co.player_id IS NULL";
@@ -96,7 +92,7 @@ public class DBConnection {
         }
     }
 
-    public int GetBlueEssence(int playerId) throws SQLException {
+    public int getBlueEssence(int playerId) throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "SELECT blue_essence FROM Player WHERE player_id = " + playerId;
             PreparedStatement s = conn.prepareStatement(sql);
@@ -106,7 +102,7 @@ public class DBConnection {
         }
     }
 
-    public void PurchaseChampion(int playerId, String championName) throws SQLException, CustomException{
+    public void purchaseChampion(int playerId, String championName) throws SQLException, CustomException {
         Connection conn = DriverManager.getConnection(url, user, password);
         try {
             String selectQuery = """
@@ -120,37 +116,37 @@ public class DBConnection {
 
             conn.setAutoCommit(false);
 
-            PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
-            PreparedStatement insertStmt = conn.prepareStatement(insertOwnership);
-            PreparedStatement updateStmt = conn.prepareStatement(updateEssence);
+            PreparedStatement selectPS = conn.prepareStatement(selectQuery);
+            PreparedStatement insertPS = conn.prepareStatement(insertOwnership);
+            PreparedStatement updatePS = conn.prepareStatement(updateEssence);
 
-            selectStmt.setInt(1, playerId);
-            selectStmt.setString(2, championName);
-            ResultSet rs = selectStmt.executeQuery();
+            selectPS.setInt(1, playerId);
+            selectPS.setString(2, championName);
+            ResultSet rs = selectPS.executeQuery();
             rs.next();
             int blueEssence = rs.getInt("blue_essence");
             int price = rs.getInt("price");
 
-            if (blueEssence < price){
+            if (blueEssence < price) {
                 throw new CustomException("Not enough blue essence!");
             }
 
-            insertStmt.setInt(1, playerId);
-            insertStmt.setString(2, championName);
-            insertStmt.executeUpdate();
+            insertPS.setInt(1, playerId);
+            insertPS.setString(2, championName);
+            insertPS.executeUpdate();
 
-            updateStmt.setInt(1, price);
-            updateStmt.setInt(2, playerId);
-            updateStmt.executeUpdate();
+            updatePS.setInt(1, price);
+            updatePS.setInt(2, playerId);
+            updatePS.executeUpdate();
 
             conn.commit();
-        }catch (Exception e){
+        } catch (Exception e) {
             conn.rollback();
             throw e;
         }
     }
 
-    public void PrintPlayers() {
+    public void printPlayers() {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM player");
@@ -172,78 +168,88 @@ public class DBConnection {
         }
     }
 
-    public void updatePlayerStats(String username, int blueEssenceEarned) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            String sql = "UPDATE Player " +
-                    "SET player_level = player_level + 1, " +
-                    "blue_essence = blue_essence + ? " +
-                    "WHERE username = ?";
+    public String playMatch(int playerId) throws SQLException {
+        String output = null;
+        Connection conn = DriverManager.getConnection(url, user, password);
+        try {
+            conn.setAutoCommit(false);
 
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, blueEssenceEarned);
-            stmt.setString(2, username);
-            stmt.executeUpdate();
-        }
-    }
+            String selectOpponent = "SELECT player_id FROM Player WHERE player_id != ? ORDER BY RAND() LIMIT 1";
+            String insertMatchHistory = "INSERT INTO MatchHistory (match_date, game_mode, game_length) VALUES (NOW(), ?, ?)";
+            String insertMatchParticipant =
+                    """
+                    INSERT INTO MatchParticipant (match_id, player_id, rank_awarded, win_loss, kills, deaths, assists)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)""";
+            String updateRewards =
+                                """
+                                UPDATE Player SET player_level = player_level + 1,
+                                blue_essence = blue_essence + ?,
+                                player_rank = GREATEST(player_rank + ?, 0)
+                                WHERE player_id = ?""";
 
-    public int createMatch(String gameMode, int gameLength) throws SQLException {
-        int matchId = -1;
-        String sql = "INSERT INTO MatchHistory (match_date, game_mode, game_length) VALUES (NOW(), ?, ?)";
+            PreparedStatement selectPS = conn.prepareStatement(selectOpponent);
+            selectPS.setInt(1, playerId);
+            ResultSet rs = selectPS.executeQuery();
 
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, gameMode);
-            stmt.setInt(2, gameLength);
-            stmt.executeUpdate();
+            rs.next();
+            int opponentId = rs.getInt("player_id");
 
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                matchId = rs.getInt(1);
+            PreparedStatement insertPS = conn.prepareStatement(insertMatchHistory, Statement.RETURN_GENERATED_KEYS);
+            insertPS.setString(1, "Ranked Solo");
+            int gameLength = (int) (Math.random() * 7200);
+            insertPS.setInt(2, gameLength);
+            insertPS.executeUpdate();
+
+            ResultSet rs2 = insertPS.getGeneratedKeys();
+            rs2.next();
+            int matchId = rs2.getInt(1);
+
+            PreparedStatement insertParticipantPS = conn.prepareStatement(insertMatchParticipant);
+
+            int[] pids = {playerId, opponentId};
+            int winningPlayer = -1;
+
+            for (int i = 0; i < 2; i++) {
+                int kills = (int) (Math.random() * 10);
+                int deaths = (int) (Math.random() * 10);
+                int assists = (int) (Math.random() * 10);
+
+                if (winningPlayer == -1){
+                    winningPlayer = kills > deaths ? 0 : 1;
+                    output = "Match Completed\n" + (i == winningPlayer ? "Win" : "Loss") + "\nKills: " + kills + "\nDeaths: " + deaths + "\nAssists: " + assists +
+                            "\nGame length: " + gameLength / 60 + ":" + gameLength % 60;
+                }
+                String winLoss = i == winningPlayer ? "Win" : "Loss";
+                int rankAwarded = i == winningPlayer ? 1 : -1;
+
+                insertParticipantPS.setInt(1, matchId);
+                insertParticipantPS.setInt(2, pids[i]);
+                insertParticipantPS.setInt(3, rankAwarded);
+                insertParticipantPS.setString(4, winLoss);
+                insertParticipantPS.setInt(5, kills);
+                insertParticipantPS.setInt(6, deaths);
+                insertParticipantPS.setInt(7, assists);
+                insertParticipantPS.executeUpdate();
             }
-        }
 
-        return matchId;
-    }
-
-    public int getPlayerIdByUsername(String username) throws SQLException {
-        int playerId = -1;
-        String sql = "SELECT player_id FROM Player WHERE username = ?";
-
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                playerId = rs.getInt("player_id");
+            PreparedStatement updateRewardPS = conn.prepareStatement(updateRewards);
+            for (int i = 0; i < 2; i++){
+                int rankAwarded = i == winningPlayer ? 1 : -1;
+                updateRewardPS.setInt(1, 5000);
+                updateRewardPS.setInt(2, rankAwarded);
+                updateRewardPS.setInt(3, pids[i]);
+                updateRewardPS.executeUpdate();
             }
-        }
+            conn.commit();
+            return output;
 
-        return playerId;
-    }
-
-    public void insertMatchParticipant(int matchId, int playerId, int rankAwarded, String winLoss, int kills, int deaths, int assists) throws SQLException {
-        String sql = "INSERT INTO MatchParticipant (match_id, player_id, rank_awarded, win_loss, kills, deaths, assists) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, matchId);
-            stmt.setInt(2, playerId);
-            stmt.setInt(3, rankAwarded);
-            stmt.setString(4, winLoss);
-            stmt.setInt(5, kills);
-            stmt.setInt(6, deaths);
-            stmt.setInt(7, assists);
-            stmt.executeUpdate();
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
         }
     }
 
-    public void playMatch(int playerId) {
-        //get opponent id
-
-    }
-
-    public ArrayList<MatchHistoryStruct> GetMatchHistory(int playerId) throws SQLException {
+    public ArrayList<MatchHistoryStruct> getMatchHistory(int playerId) throws SQLException {
         ArrayList<MatchHistoryStruct> matchHistoryStructs = new ArrayList<>();
 
         String sql = """
@@ -281,6 +287,16 @@ public class DBConnection {
 
                 return matchHistoryStructs;
             }
+        }
+    }
+
+    public int selectLevel(int playerId) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            String sql = "SELECT player_level FROM Player WHERE player_id = " + playerId;
+            PreparedStatement s = conn.prepareStatement(sql);
+            ResultSet rs = s.executeQuery();
+            rs.next();
+            return rs.getInt("player_level");
         }
     }
 }

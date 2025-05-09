@@ -2,23 +2,23 @@ USE
 GameDB;
 
 INSERT INTO Player (username, player_level, player_rank, blue_essence)
-VALUES ('Summoner01', 10, 100, 5000),
-       ('Summoner02', 12, 120, 4200),
-       ('Summoner03', 8, 90, 3000),
-       ('Summoner04', 15, 200, 10000),
-       ('Summoner05', 20, 250, 8000),
-('Bob', 15, 200, 10000),
-       ('John', 20, 250, 8000),
-       ('Joe', 15, 200, 10000),
-       ('Jill', 20, 250, 8000),
-       ('Doe', 15, 200, 10000),
-       ('Alice', 20, 250, 8000),
-       ('Trudy', 15, 210, 10000),
-       ('Sam', 220, 250, 8000),
-       ('Ike', 15, 201, 10000),
-       ('xxx', 2, 250, 8000),
-       ('yyy', 15, 10, 10000),
-       ('zzz', 20, 250, 8000);
+VALUES ('Bob', 15, 2, 10000),
+       ('John', 20, 1, 8000),
+       ('Joe', 15, 5, 10000),
+       ('Jill', 20, 2, 8000),
+       ('Doe', 15, 3, 10000),
+       ('Alice', 20, 0, 8000),
+       ('Trudy', 15, 0, 10000),
+       ('Sam', 220, 6, 8000),
+       ('Ike', 15, 5, 10000),
+       ('xxx', 2, 2, 8000),
+       ('yyy', 15, 8, 10000),
+       ('Summoner01', 4, 4, 5000),
+       ('Summoner02', 3, 55, 4200),
+       ('Summoner03', 6, 2, 3000),
+       ('Summoner04', 5, 4, 10000),
+       ('Summoner05', 20, 1, 8000),
+       ('zzz', 20, 32, 8000);
 
 INSERT INTO Champion (champion_name, price)
 VALUES ('Ahri', 4800),

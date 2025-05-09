@@ -6,11 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LeaderboardPanel extends UIPanel
 {
     private JLabel leaderboardTitleLabel;
-    private ArrayList<JLabel> leaderboardLabels;
     private JLabel parentPanel;
 
     public LeaderboardPanel(Presentation p) {
@@ -18,9 +18,9 @@ public class LeaderboardPanel extends UIPanel
         this.setLayout(new BorderLayout());
         leaderboardTitleLabel = new JLabel("Leaderboard", SwingConstants.CENTER);
         this.add(leaderboardTitleLabel, BorderLayout.NORTH);
-        leaderboardLabels = new ArrayList<JLabel>();
+
         parentPanel = new JLabel();
-        parentPanel.setLayout(new GridLayout(21,1));
+        parentPanel.setLayout(new GridLayout(16,1));
         this.add(parentPanel, BorderLayout.CENTER);
 
         JButton back = new JButton("Back");
@@ -35,25 +35,25 @@ public class LeaderboardPanel extends UIPanel
 
     public void SetLeaderboard(){
 
-        while (leaderboardLabels.size() > 0){
-            JLabel label = leaderboardLabels.remove(0);
-            this.remove(label);
-        }
-
         JLabel temp = new JLabel();
         temp.setLayout(new GridLayout(1,2));
         temp.add(new JLabel("Username", SwingConstants.CENTER));
         temp.add(new JLabel("Rank Points", SwingConstants.CENTER));
         parentPanel.add(temp);
-        leaderboardLabels.add(temp);
 
         try {
-            ArrayList<ArrayList<String>> a = GetPresentation().getDbc().GetLeaderboard();
-            for (int i = 0; i < a.size(); i++){
+            ArrayList<ArrayList<String>> a = GetPresentation().getDbc().getLeaderboard();
+            for (int i = 0; i < a.size() && i < 15; i++){
                 temp = new JLabel();
                 temp.setLayout(new GridLayout(1,2));
-                temp.add(new JLabel(a.get(i).get(0), SwingConstants.CENTER));
-                temp.add(new JLabel(a.get(i).get(1), SwingConstants.CENTER));
+                JLabel t1 = new JLabel(a.get(i).get(0), SwingConstants.CENTER);
+                JLabel t2 = new JLabel(a.get(i).get(1), SwingConstants.CENTER);
+                if (Objects.equals(GetPresentation().getUsername(), t1.getText())){
+                    t1.setForeground(Color.BLUE);
+                    t2.setForeground(Color.BLUE);
+                }
+                temp.add(t1);
+                temp.add(t2);
                 parentPanel.add(temp);
             }
         }catch (SQLException e){

@@ -55,7 +55,7 @@ public class MatchHistoryPanel extends UIPanel
         matchHistoryLabels.add(temp);
 
         try {
-            ArrayList<MatchHistoryStruct> a = GetPresentation().getDbc().GetMatchHistory(GetPresentation().getPlayer_id());
+            ArrayList<MatchHistoryStruct> a = GetPresentation().getDbc().getMatchHistory(GetPresentation().getPlayer_id());
             for (int i = 0; i < a.size(); i++){
                 temp = new JLabel();
                 temp.setLayout(new GridLayout(1,6));

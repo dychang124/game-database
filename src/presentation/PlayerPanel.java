@@ -4,17 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
-import java.lang.Math;
 import java.sql.SQLException;
 import java.awt.*;
 
 public class PlayerPanel extends UIPanel {
 
     private JLabel usernameLabel;
+    private JLabel levelLabel;
+
     private JButton playButton;
-    private int matchId = -1;
-    private int kills, deaths, assists, gametime;
-    private String winLoss;
 
     private JButton viewLeaderboard;
 
@@ -30,28 +28,19 @@ public class PlayerPanel extends UIPanel {
     {
         super(p);
 
-        this.setLayout(new GridLayout(7,1));
+        this.setLayout(new GridLayout(8,1));
 
         usernameLabel = new JLabel("Welcome, " + p.getUsername() + "!");
         this.add(usernameLabel);
 
+        levelLabel = new JLabel();
+        this.add(levelLabel);
+        refreshLevelLabel();
 
         playButton = new JButton("Play");
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                startGame(p.getUsername());
-                if(matchId != -1)
-                {
-                    /*
-                    System.out.println("Game Over:");
-                    System.out.println("Win/Loss: " + winLoss);
-                    System.out.println("Kills: " + kills);
-                    System.out.println("Deaths: " + deaths);
-                    System.out.println("Assists: " + assists);
-                    System.out.println("Game length: " + gametime + " seconds");*/
-                    JOptionPane.showMessageDialog(usernameLabel, "Match Completed\n" + winLoss +
-                            "\nKills: " + kills + "\nDeaths: " + deaths + "\nAssists: " + assists + "\nGame length: " + gametime / 60 + " minutes " + gametime % 60 + " seconds");
-                }
+                startMatch();
             }
         });
         this.add(playButton);
@@ -99,21 +88,19 @@ public class PlayerPanel extends UIPanel {
         this.add(logoutButton);
     }
 
-    private void startGame(String username)
-    {
-        kills = (int)(Math.random()*10);
-        deaths = (int)(Math.random()*10);
-        assists = (int)(Math.random()*10);
-        gametime = (int)(Math.random()*10000);
-        winLoss = kills > deaths ? "Win" : "Loss";
-        int rankAwarded = winLoss.equals("Win") ? 1 : -1;
-
+    public void startMatch(){
         try {
-            matchId = GetPresentation().getDbc().createMatch("Ranked Solo", gametime);
-            int playerId = GetPresentation().getDbc().getPlayerIdByUsername(username);
-            GetPresentation().getDbc().insertMatchParticipant(matchId, playerId, rankAwarded, winLoss, kills, deaths, assists);
-            System.out.println("Match and stats saved successfully.");
-        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(usernameLabel, GetPresentation().getDbc().playMatch(GetPresentation().getPlayer_id()));
+        }catch (SQLException e){
+            JOptionPane.showMessageDialog(usernameLabel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        refreshLevelLabel();
+    }
+
+    public void refreshLevelLabel(){
+        try {
+            this.levelLabel.setText("Level " + GetPresentation().getDbc().selectLevel(GetPresentation().getPlayer_id()));
+        }catch (SQLException e){
             e.printStackTrace();
         }
     }
