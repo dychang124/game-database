@@ -12,16 +12,36 @@ public class DBConnection {
         printPlayers();
     }
 
-    public void insertPlayer(String Username) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+    public void insertPlayer(String username) throws SQLException, CustomException {
+
+        if (username.isEmpty()){
+            throw new CustomException("Username too short");
+        }
+
+        Connection conn = DriverManager.getConnection(url, user, password);
+        try {
+            conn.setAutoCommit(false);
+
+            String select = "SELECT player_id FROM player WHERE username = ?";
+            PreparedStatement s = conn.prepareStatement(select);
+            s.setString(1, username);
+            ResultSet rs = s.executeQuery();
+
+            if (rs.next()) {
+                throw new CustomException("Username already exists");
+            }
+
             String sql = "INSERT INTO player (username) VALUES (?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, Username);
+            stmt.setString(1, username);
             stmt.executeUpdate();
+        }catch (Exception e){
+            conn.rollback();
+            throw e;
         }
     }
 
-    public int tryLogin(String username) throws SQLException {
+    public int tryLogin(String username) throws SQLException, CustomException {
         int id = -1;
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "SELECT player_id FROM player WHERE username = ?";
@@ -31,7 +51,11 @@ public class DBConnection {
 
             if (rs.next()) {
                 id = rs.getInt("player_id");
+            }else{
+                throw new CustomException("Username does not exist");
             }
+        }catch (Exception e){
+            throw e;
         }
         return id;
     }

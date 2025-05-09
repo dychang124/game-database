@@ -42,13 +42,13 @@ public class LeaderboardPanel extends UIPanel
         parentPanel.add(temp);
 
         try {
-            ArrayList<ArrayList<String>> a = GetPresentation().getDbc().getLeaderboard();
+            ArrayList<ArrayList<String>> a = getPresentation().getDbc().getLeaderboard();
             for (int i = 0; i < a.size() && i < 15; i++){
                 temp = new JLabel();
                 temp.setLayout(new GridLayout(1,2));
                 JLabel t1 = new JLabel(a.get(i).get(0), SwingConstants.CENTER);
                 JLabel t2 = new JLabel(a.get(i).get(1), SwingConstants.CENTER);
-                if (Objects.equals(GetPresentation().getUsername(), t1.getText())){
+                if (Objects.equals(getPresentation().getUsername(), t1.getText())){
                     t1.setForeground(Color.BLUE);
                     t2.setForeground(Color.BLUE);
                 }

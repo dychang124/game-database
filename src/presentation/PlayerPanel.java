@@ -48,7 +48,7 @@ public class PlayerPanel extends UIPanel {
         viewLeaderboard = new JButton("View Leaderboard");
         viewLeaderboard.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                GetPresentation().SwitchPanel(new LeaderboardPanel(GetPresentation()));
+                getPresentation().SwitchPanel(new LeaderboardPanel(getPresentation()));
             }
         });
         this.add(viewLeaderboard);
@@ -56,7 +56,7 @@ public class PlayerPanel extends UIPanel {
         viewMatchHistory = new JButton("View Match History");
         viewMatchHistory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                GetPresentation().SwitchPanel(new MatchHistoryPanel(GetPresentation()));
+                getPresentation().SwitchPanel(new MatchHistoryPanel(getPresentation()));
             }
         });
         this.add(viewMatchHistory);
@@ -64,7 +64,7 @@ public class PlayerPanel extends UIPanel {
         viewChampionsOwned = new JButton("Open Collection");
         viewChampionsOwned.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                GetPresentation().SwitchPanel(new OwnedChampionsPanel(GetPresentation()));
+                getPresentation().SwitchPanel(new OwnedChampionsPanel(getPresentation()));
             }
         });
         this.add(viewChampionsOwned);
@@ -72,7 +72,7 @@ public class PlayerPanel extends UIPanel {
         viewShop = new JButton("Open Shop");
         viewShop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                GetPresentation().SwitchPanel(new ShopPanel(GetPresentation()));
+                getPresentation().SwitchPanel(new ShopPanel(getPresentation()));
             }
         });
         this.add(viewShop);
@@ -80,9 +80,9 @@ public class PlayerPanel extends UIPanel {
         logoutButton = new JButton("Log out");
         logoutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                GetPresentation().setPlayer_id(-1);
-                GetPresentation().setUsername(null);
-                GetPresentation().SwitchPanel(new LoginPanel(GetPresentation()));
+                getPresentation().setPlayer_id(-1);
+                getPresentation().setUsername(null);
+                getPresentation().SwitchPanel(new LoginPanel(getPresentation()));
             }
         });
         this.add(logoutButton);
@@ -90,7 +90,7 @@ public class PlayerPanel extends UIPanel {
 
     public void startMatch(){
         try {
-            JOptionPane.showMessageDialog(usernameLabel, GetPresentation().getDbc().playMatch(GetPresentation().getPlayer_id()));
+            JOptionPane.showMessageDialog(usernameLabel, getPresentation().getDbc().playMatch(getPresentation().getPlayer_id()));
         }catch (SQLException e){
             JOptionPane.showMessageDialog(usernameLabel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -99,7 +99,7 @@ public class PlayerPanel extends UIPanel {
 
     public void refreshLevelLabel(){
         try {
-            this.levelLabel.setText("Level " + GetPresentation().getDbc().selectLevel(GetPresentation().getPlayer_id()));
+            this.levelLabel.setText("Level " + getPresentation().getDbc().selectLevel(getPresentation().getPlayer_id()));
         }catch (SQLException e){
             e.printStackTrace();
         }

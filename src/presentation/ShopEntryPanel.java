@@ -25,7 +25,7 @@ public class ShopEntryPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    parent.GetPresentation().getDbc().purchaseChampion(parent.GetPresentation().getPlayer_id(), championName);
+                    parent.getPresentation().getDbc().purchaseChampion(parent.getPresentation().getPlayer_id(), championName);
                     parent.RefreshShop();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
