@@ -1,5 +1,7 @@
 package presentation;
 
+import application.MatchHistoryStruct;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -51,20 +53,26 @@ public class MatchHistoryPanel extends UIPanel
         temp.add(new JLabel("Game Time", SwingConstants.CENTER));
         parentPanel.add(temp);
         matchHistoryLabels.add(temp);
-/*
+
         try {
-            ArrayList<ArrayList<String>> a = GetPresentation().getDbc().GetLeaderboard();
+            ArrayList<MatchHistoryStruct> a = GetPresentation().getDbc().GetMatchHistory(GetPresentation().getPlayer_id());
             for (int i = 0; i < a.size(); i++){
                 temp = new JLabel();
-                temp.setLayout(new GridLayout(1,2));
-                temp.add(new JLabel(a.get(i).get(0), SwingConstants.CENTER));
-                temp.add(new JLabel(a.get(i).get(1), SwingConstants.CENTER));
+                temp.setLayout(new GridLayout(1,6));
+                temp.add(new JLabel(a.get(i).timestamp.toString(), SwingConstants.CENTER));
+                temp.add(new JLabel(a.get(i).wl, SwingConstants.CENTER));
+                temp.add(new JLabel(a.get(i).opponent, SwingConstants.CENTER));
+                temp.add(new JLabel(a.get(i).kills + "", SwingConstants.CENTER));
+                temp.add(new JLabel(a.get(i).kills + "", SwingConstants.CENTER));
+                temp.add(new JLabel(a.get(i).kills + "", SwingConstants.CENTER));
+                temp.add(new JLabel(a.get(i).gameLength / 60 + ":" + a.get(i).gameLength % 60, SwingConstants.CENTER));
                 parentPanel.add(temp);
+                matchHistoryLabels.add(temp);
             }
         }catch (SQLException e){
             e.printStackTrace();
         }
-*/
+
         this.repaint();
     }
 }

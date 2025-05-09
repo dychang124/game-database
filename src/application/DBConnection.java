@@ -1,11 +1,6 @@
 package application;
 import java.awt.image.AreaAveragingScaleFilter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class DBConnection {
@@ -206,6 +201,52 @@ public class DBConnection {
             stmt.setInt(6, deaths);
             stmt.setInt(7, assists);
             stmt.executeUpdate();
+        }
+    }
+
+    public void playMatch(int playerId){
+        //get opponent id
+
+    }
+
+    public ArrayList<MatchHistoryStruct> GetMatchHistory(int playerId) throws SQLException {
+        ArrayList<MatchHistoryStruct> matchHistoryStructs = new ArrayList<>();
+
+        String sql = """
+            SELECT 
+                mh.match_date,
+                mp1.win_loss,
+                p2.username AS opponent_username,
+                mp1.kills,
+                mp1.deaths,
+                mp1.assists,
+                mh.game_length
+            FROM MatchParticipant mp1
+            JOIN MatchHistory mh ON mp1.match_id = mh.match_id
+            JOIN MatchParticipant mp2 ON mp1.match_id = mp2.match_id AND mp1.player_id != mp2.player_id
+            JOIN Player p2 ON mp2.player_id = p2.player_id
+            WHERE mp1.player_id = ?
+            ORDER BY mh.match_date DESC
+        """;
+
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement s = conn.prepareStatement(sql);
+            s.setInt(1, playerId);
+            try (ResultSet rs = s.executeQuery()) {
+                while (rs.next()) {
+                    Timestamp matchDate = rs.getTimestamp("match_date");
+                    String winLoss = rs.getString("win_loss");
+                    String opponent = rs.getString("opponent_username");
+                    int kills = rs.getInt("kills");
+                    int deaths = rs.getInt("deaths");
+                    int assists = rs.getInt("assists");
+                    int gameLength = rs.getInt("game_length");
+
+                    matchHistoryStructs.add(new MatchHistoryStruct(matchDate, winLoss, opponent, kills, deaths, assists, gameLength));
+                }
+
+                return matchHistoryStructs;
+            }
         }
     }
 }
