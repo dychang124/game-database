@@ -10,7 +10,7 @@ import java.awt.*;
 public class PlayerPanel extends UIPanel {
 
     private JLabel usernameLabel;
-    private JLabel levelLabel;
+    private JLabel profileLabel;
 
     private JButton playButton;
 
@@ -33,9 +33,9 @@ public class PlayerPanel extends UIPanel {
         usernameLabel = new JLabel("Welcome, " + p.getUsername() + "!");
         this.add(usernameLabel);
 
-        levelLabel = new JLabel();
-        this.add(levelLabel);
-        refreshLevelLabel();
+        profileLabel = new JLabel();
+        this.add(profileLabel);
+        refreshProfileLabel();
 
         playButton = new JButton("Play");
         playButton.addActionListener(new ActionListener() {
@@ -94,15 +94,14 @@ public class PlayerPanel extends UIPanel {
         }catch (SQLException e){
             JOptionPane.showMessageDialog(usernameLabel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        refreshLevelLabel();
+        refreshProfileLabel();
     }
 
-    public void refreshLevelLabel(){
+    public void refreshProfileLabel(){
         try {
-            this.levelLabel.setText("Level " + getPresentation().getDbc().selectLevel(getPresentation().getPlayer_id()));
+            this.profileLabel.setText(getPresentation().getDbc().selectPlayerProfile(getPresentation().getPlayer_id()));
         }catch (SQLException e){
             e.printStackTrace();
         }
     }
-
 }

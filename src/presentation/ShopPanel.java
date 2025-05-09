@@ -58,7 +58,7 @@ public class ShopPanel extends UIPanel{
 
     public void SetBlueEssence(){
         try {
-            blueEssenceInventory.setText("BlueEssence: " + getPresentation().getDbc().getBlueEssence(getPresentation().getPlayer_id()));
+            blueEssenceInventory.setText("Blue Essence: " + getPresentation().getDbc().getBlueEssence(getPresentation().getPlayer_id()));
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(ShopPanel.this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

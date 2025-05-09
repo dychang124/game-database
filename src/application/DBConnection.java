@@ -323,4 +323,14 @@ public class DBConnection {
             return rs.getInt("player_level");
         }
     }
+
+    public String selectPlayerProfile(int playerId) throws SQLException{
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            String sql = "SELECT player_level, player_rank, blue_essence FROM Player WHERE player_id = " + playerId;
+            PreparedStatement s = conn.prepareStatement(sql);
+            ResultSet rs = s.executeQuery();
+            rs.next();
+            return "Level " + rs.getInt("player_level") + "   Rank Points: " + rs.getInt("player_rank") + "   Blue Essence: " + rs.getInt("blue_essence");
+        }
+    }
 }
