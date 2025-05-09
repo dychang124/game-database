@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS MatchParticipant (
     deaths INT NOT NULL,
     assists INT NOT NULL,
     PRIMARY KEY (match_id, player_id),
-    FOREIGN KEY (match_id) REFERENCES MatchHistory(match_id),
+    FOREIGN KEY (match_id) REFERENCES MatchHistory(match_id) ON DELETE CASCADE,
     FOREIGN KEY (player_id) REFERENCES Player(player_id) ON DELETE CASCADE
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS ChampionsOwned (
     champion_name VARCHAR(50),
     PRIMARY KEY (player_id, champion_name),
     FOREIGN KEY (player_id) REFERENCES Player(player_id) ON DELETE CASCADE,
-    FOREIGN KEY (champion_name) REFERENCES Champion(champion_name)
+    FOREIGN KEY (champion_name) REFERENCES Champion(champion_name) ON DELETE CASCADE
 );
 
 CREATE USER IF NOT EXISTS 'user'@'localhost' IDENTIFIED BY 'password';
