@@ -16,6 +16,8 @@ public class DBConnection {
 
         if (username.isEmpty()){
             throw new CustomException("Username too short");
+        }else if (username.length() > 50){
+            throw new CustomException("Username too long");
         }
 
         Connection conn = DriverManager.getConnection(url, user, password);
