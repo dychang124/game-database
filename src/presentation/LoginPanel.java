@@ -73,7 +73,7 @@ public class LoginPanel extends UIPanel {
                     //Database query
                     p.getDbc().insertPlayer(input);
                     p.setUsername(input);
-                    JOptionPane.showMessageDialog(null, "Username "+ input +" has been registered.");
+                    JOptionPane.showMessageDialog(LoginPanel.this, "Username "+ input +" has been registered.");
                     username.setText("");
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(LoginPanel.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
