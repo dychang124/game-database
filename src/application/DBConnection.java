@@ -44,6 +44,30 @@ public class DBConnection {
         }
     }
 
+    public void deletePlayer(int playerID) throws SQLException, CustomException {
+        Connection conn = DriverManager.getConnection(url, user, password);
+        try  {
+            conn.setAutoCommit(false);
+
+            String deleteSQL = "DELETE FROM Player WHERE player_id = ?";
+            PreparedStatement ps = conn.prepareStatement(deleteSQL);
+            ps.setInt(1, playerID);
+            int affected = ps.executeUpdate();
+
+            if (affected == 0) {
+                throw new CustomException("Player ID not found");
+            }
+
+            conn.commit();
+            ps.close();
+
+        } catch (Exception e) {
+            conn.rollback();
+            throw e;  // Connection is still auto-closed
+        }
+    }
+
+
     public int tryLogin(String username) throws SQLException, CustomException {
         int id = -1;
         try (Connection conn = DriverManager.getConnection(url, user, password)) {

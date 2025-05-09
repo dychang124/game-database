@@ -24,6 +24,8 @@ public class PlayerPanel extends UIPanel {
 
     private JButton logoutButton;
 
+    private JButton deleteButton;
+
     public PlayerPanel(Presentation p)
     {
         super(p);
@@ -88,6 +90,22 @@ public class PlayerPanel extends UIPanel {
             }
         });
         this.add(logoutButton);
+
+        deleteButton = new JButton("Delete Account");
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    getPresentation().getDbc().deletePlayer(getPresentation().getPlayer_id());
+                }catch(Exception error)
+                {
+                    error.getMessage();
+                }
+                getPresentation().setPlayer_id(-1);
+                getPresentation().setUsername(null);
+                getPresentation().SwitchPanel(new LoginPanel(getPresentation()));
+            }
+        });
+        this.add(deleteButton);
     }
 
     public void startMatch(){
