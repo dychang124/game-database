@@ -1,12 +1,15 @@
 package presentation;
 
+import application.CustomException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class ShopEntryPanel extends JPanel {
-    public ShopEntryPanel(String championName, int cost) {
+    public ShopEntryPanel(String championName, int cost, ShopPanel parent) {
         super();
         this.setBackground(Color.gray);
         this.setLayout(new GridLayout(1,2));
@@ -21,7 +24,15 @@ public class ShopEntryPanel extends JPanel {
         purchaseLabel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                try {
+                    parent.GetPresentation().getDbc().PurchaseChampion(parent.GetPresentation().getPlayer_id(), championName);
+                    parent.RefreshShop();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(championNameLabel, ex.getMessage(), "Purchase Failed", JOptionPane.ERROR_MESSAGE);
+                } catch (CustomException ex){
+                    JOptionPane.showMessageDialog(championNameLabel, ex.getMessage(), "Purchase Failed", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }

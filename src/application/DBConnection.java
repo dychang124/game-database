@@ -1,4 +1,5 @@
 package application;
+
 import java.awt.image.AreaAveragingScaleFilter;
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,11 +9,11 @@ public class DBConnection {
     String user = "user";
     String password = "password";
 
-    public DBConnection(){
+    public DBConnection() {
         PrintPlayers();
     }
 
-    public int InsertPlayer(String Username) throws SQLException{
+    public int InsertPlayer(String Username) throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "INSERT INTO player (username) VALUES (?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -23,9 +24,9 @@ public class DBConnection {
         }
     }
 
-    public int TryLogin(String username) throws SQLException{
+    public int TryLogin(String username) throws SQLException {
         int id = -1;
-        try (Connection conn = DriverManager.getConnection(url, user, password)){
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "SELECT player_id FROM player WHERE username = ?";
             PreparedStatement s = conn.prepareStatement(sql);
             s.setString(1, username);
@@ -38,7 +39,7 @@ public class DBConnection {
         return id;
     }
 
-    public ArrayList<ArrayList<String>> GetLeaderboard() throws SQLException{
+    public ArrayList<ArrayList<String>> GetLeaderboard() throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM player ORDER BY player_rank DESC");
@@ -59,7 +60,7 @@ public class DBConnection {
         }
     }
 
-    public ArrayList<String> GetOwnedChampions(int id) throws SQLException{
+    public ArrayList<String> GetOwnedChampions(int id) throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT champion_name FROM ChampionsOwned WHERE player_id = " + id);
@@ -68,13 +69,13 @@ public class DBConnection {
 
             while (rs.next()) {
                 String champ = rs.getString("champion_name");
-                owned.add(champ) ;
+                owned.add(champ);
             }
             return owned;
         }
     }
 
-    public ArrayList<StringIntTuple> GetUnOwnedChampions(int id) throws SQLException{
+    public ArrayList<StringIntTuple> GetUnOwnedChampions(int id) throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
 
             String sql = "SELECT c.champion_name, c.price FROM Champion c LEFT JOIN ChampionsOwned co ON c.champion_name = co.champion_name AND co.player_id = ? WHERE co.player_id IS NULL";
@@ -89,36 +90,67 @@ public class DBConnection {
             while (rs.next()) {
                 StringIntTuple t = new StringIntTuple(rs.getString("champion_name"), rs.getInt("price"));
 
-                shop.add(t) ;
+                shop.add(t);
             }
             return shop;
         }
     }
 
-
-
-    public ArrayList<String> PurchaseChampion(String championName){
+    public int GetBlueEssence(int playerId) throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            Statement s = conn.createStatement();
-            ResultSet rs = s.executeQuery("SELECT * FROM player ORDER BY player_rank DESC");
-
-
-            ArrayList<String> leaderboard = new ArrayList<>();
-
-            while (rs.next()) {
-                int level = rs.getInt("player_level");
-                String username = rs.getString("username");
-                String rank = rs.getString("player_rank");
-
-                leaderboard.add((level + " " + username + " " + rank)) ;
-            }
-            return leaderboard;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            String sql = "SELECT blue_essence FROM Player WHERE player_id = " + playerId;
+            PreparedStatement s = conn.prepareStatement(sql);
+            ResultSet rs = s.executeQuery();
+            rs.next();
+            return rs.getInt("blue_essence");
         }
     }
 
-    public void PrintPlayers(){
+    public void PurchaseChampion(int playerId, String championName) throws SQLException, CustomException{
+        Connection conn = DriverManager.getConnection(url, user, password);
+        try {
+            String selectQuery = """
+                        SELECT p.blue_essence, c.price 
+                        FROM Player p, Champion c
+                        WHERE p.player_id = ? AND c.champion_name = ?
+                    """;
+
+            String insertOwnership = "INSERT INTO ChampionsOwned (player_id, champion_name) VALUES (?, ?)";
+            String updateEssence = "UPDATE Player SET blue_essence = blue_essence - ? WHERE player_id = ?";
+
+            conn.setAutoCommit(false);
+
+            PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
+            PreparedStatement insertStmt = conn.prepareStatement(insertOwnership);
+            PreparedStatement updateStmt = conn.prepareStatement(updateEssence);
+
+            selectStmt.setInt(1, playerId);
+            selectStmt.setString(2, championName);
+            ResultSet rs = selectStmt.executeQuery();
+            rs.next();
+            int blueEssence = rs.getInt("blue_essence");
+            int price = rs.getInt("price");
+
+            if (blueEssence < price){
+                throw new CustomException("Not enough blue essence!");
+            }
+
+            insertStmt.setInt(1, playerId);
+            insertStmt.setString(2, championName);
+            insertStmt.executeUpdate();
+
+            updateStmt.setInt(1, price);
+            updateStmt.setInt(2, playerId);
+            updateStmt.executeUpdate();
+
+            conn.commit();
+        }catch (Exception e){
+            conn.rollback();
+            throw e;
+        }
+    }
+
+    public void PrintPlayers() {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM player");
@@ -139,58 +171,60 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
+
     public void updatePlayerStats(String username, int blueEssenceEarned) throws SQLException {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "UPDATE Player " +
-                         "SET player_level = player_level + 1, " +
-                         "blue_essence = blue_essence + ? " +
-                         "WHERE username = ?";
-    
+                    "SET player_level = player_level + 1, " +
+                    "blue_essence = blue_essence + ? " +
+                    "WHERE username = ?";
+
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, blueEssenceEarned);
             stmt.setString(2, username);
             stmt.executeUpdate();
         }
     }
+
     public int createMatch(String gameMode, int gameLength) throws SQLException {
         int matchId = -1;
         String sql = "INSERT INTO MatchHistory (match_date, game_mode, game_length) VALUES (NOW(), ?, ?)";
-    
+
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, gameMode);
             stmt.setInt(2, gameLength);
             stmt.executeUpdate();
-    
+
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 matchId = rs.getInt(1);
             }
         }
-    
+
         return matchId;
     }
-    
+
     public int getPlayerIdByUsername(String username) throws SQLException {
         int playerId = -1;
         String sql = "SELECT player_id FROM Player WHERE username = ?";
-    
+
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
-    
+
             if (rs.next()) {
                 playerId = rs.getInt("player_id");
             }
         }
-    
+
         return playerId;
     }
-    
+
     public void insertMatchParticipant(int matchId, int playerId, int rankAwarded, String winLoss, int kills, int deaths, int assists) throws SQLException {
         String sql = "INSERT INTO MatchParticipant (match_id, player_id, rank_awarded, win_loss, kills, deaths, assists) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    
+
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, matchId);
@@ -204,7 +238,7 @@ public class DBConnection {
         }
     }
 
-    public void playMatch(int playerId){
+    public void playMatch(int playerId) {
         //get opponent id
 
     }
@@ -213,21 +247,21 @@ public class DBConnection {
         ArrayList<MatchHistoryStruct> matchHistoryStructs = new ArrayList<>();
 
         String sql = """
-            SELECT 
-                mh.match_date,
-                mp1.win_loss,
-                p2.username AS opponent_username,
-                mp1.kills,
-                mp1.deaths,
-                mp1.assists,
-                mh.game_length
-            FROM MatchParticipant mp1
-            JOIN MatchHistory mh ON mp1.match_id = mh.match_id
-            JOIN MatchParticipant mp2 ON mp1.match_id = mp2.match_id AND mp1.player_id != mp2.player_id
-            JOIN Player p2 ON mp2.player_id = p2.player_id
-            WHERE mp1.player_id = ?
-            ORDER BY mh.match_date DESC
-        """;
+                    SELECT 
+                        mh.match_date,
+                        mp1.win_loss,
+                        p2.username AS opponent_username,
+                        mp1.kills,
+                        mp1.deaths,
+                        mp1.assists,
+                        mh.game_length
+                    FROM MatchParticipant mp1
+                    JOIN MatchHistory mh ON mp1.match_id = mh.match_id
+                    JOIN MatchParticipant mp2 ON mp1.match_id = mp2.match_id AND mp1.player_id != mp2.player_id
+                    JOIN Player p2 ON mp2.player_id = p2.player_id
+                    WHERE mp1.player_id = ?
+                    ORDER BY mh.match_date DESC
+                """;
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             PreparedStatement s = conn.prepareStatement(sql);

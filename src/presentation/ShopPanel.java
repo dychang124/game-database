@@ -11,20 +11,21 @@ import java.util.ArrayList;
 
 public class ShopPanel extends UIPanel{
     private JLabel ocTitleLabel;
+    private JLabel blueEssenceInventory;
     private JPanel listPanel;
     private JButton backButton;
-    private ArrayList<ShopEntryPanel> shopLabels;
     public ShopPanel(Presentation p) {
         super(p);
 
-        this.setLayout(new GridLayout(3,1));
+        this.setLayout(new GridLayout(4,1));
         ocTitleLabel = new JLabel("Shop");
-        listPanel = new JPanel(new GridLayout(10,1));
-
         this.add(ocTitleLabel);
-        this.add(listPanel);
 
-        shopLabels = new ArrayList<ShopEntryPanel>();
+        blueEssenceInventory = new JLabel();
+        this.add(blueEssenceInventory);
+
+        listPanel = new JPanel(new GridLayout(10,1));
+        this.add(listPanel);
 
         backButton = new JButton("Back");
         backButton.addActionListener(new ActionListener() {
@@ -38,20 +39,28 @@ public class ShopPanel extends UIPanel{
     }
 
     public void RefreshShop() {
-        while (!shopLabels.isEmpty()){
-            shopLabels.remove(0);
-        }
+        listPanel.removeAll();
 
         try {
             ArrayList<StringIntTuple> a = GetPresentation().getDbc().GetUnOwnedChampions(GetPresentation().getPlayer_id());
             for (int i = 0; i < a.size(); i++){
-                ShopEntryPanel label = new ShopEntryPanel(a.get(i).getStr(), a.get(i).getNum());
+                ShopEntryPanel label = new ShopEntryPanel(a.get(i).getStr(), a.get(i).getNum(), this);
                 listPanel.add(label);
             }
         }catch (SQLException e){
             e.printStackTrace();
         }
 
+        SetBlueEssence();
+
         this.repaint();
+    }
+
+    public void SetBlueEssence(){
+        try {
+            blueEssenceInventory.setText("BlueEssence: " + GetPresentation().getDbc().GetBlueEssence(GetPresentation().getPlayer_id()));
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(ShopPanel.this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
