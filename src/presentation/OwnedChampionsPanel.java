@@ -55,4 +55,6 @@ public class OwnedChampionsPanel extends UIPanel{
 
         this.repaint();
     }
+
+
 }

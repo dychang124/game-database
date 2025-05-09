@@ -3,8 +3,7 @@ package presentation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
+import javax.swing.*;
 import java.lang.Math;
 import java.sql.SQLException;
 import java.awt.*;
@@ -18,6 +17,8 @@ public class PlayerPanel extends UIPanel {
     private String winLoss;
 
     private JButton viewLeaderboard;
+
+    private JButton viewMatchHistory;
 
     private JButton viewChampionsOwned;
 
@@ -41,12 +42,15 @@ public class PlayerPanel extends UIPanel {
                 startGame(p.getUsername());
                 if(matchId != -1)
                 {
+                    /*
                     System.out.println("Game Over:");
                     System.out.println("Win/Loss: " + winLoss);
                     System.out.println("Kills: " + kills);
                     System.out.println("Deaths: " + deaths);
                     System.out.println("Assists: " + assists);
-                    System.out.println("Game length: " + gametime + " seconds");
+                    System.out.println("Game length: " + gametime + " seconds");*/
+                    JOptionPane.showMessageDialog(usernameLabel, "Match Completed\n" + winLoss +
+                            "\nKills: " + kills + "\nDeaths: " + deaths + "\nAssists: " + assists + "\nGame length: " + gametime / 60 + " minutes " + gametime % 60 + " seconds");
                 }
             }
         });
@@ -59,6 +63,14 @@ public class PlayerPanel extends UIPanel {
             }
         });
         this.add(viewLeaderboard);
+
+        viewMatchHistory = new JButton("View Match History");
+        viewMatchHistory.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GetPresentation().SwitchPanel(new MatchHistoryPanel(GetPresentation()));
+            }
+        });
+        this.add(viewMatchHistory);
 
         viewChampionsOwned = new JButton("Open Collection");
         viewChampionsOwned.addActionListener(new ActionListener() {
@@ -104,9 +116,6 @@ public class PlayerPanel extends UIPanel {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-
     }
 
 }
