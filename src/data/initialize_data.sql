@@ -1,5 +1,5 @@
 USE
-GameDB;
+    GameDB;
 
 INSERT INTO Player (username, player_level, player_rank, blue_essence)
 VALUES ('Bob', 15, 2, 10000),
@@ -39,14 +39,14 @@ VALUES ('Ahri', 4800),
 
 INSERT INTO MatchHistory (match_date, game_mode, game_length)
 VALUES ('2025-05-01 14:30:00', 'Ranked Solo', 1000),
-	   ('2025-05-01 15:30:00', 'Ranked Solo', 1200),
-	   ('2025-05-01 16:30:00', 'Ranked Solo', 1300),
-	   ('2025-05-01 18:15:00', 'Ranked Solo', 500),
-	   ('2025-05-02 14:30:00', 'Ranked Solo', 4500),
-	   ('2025-05-01 16:30:00', 'Ranked Solo', 2000),
-	   ('2025-05-01 18:30:00', 'Ranked Solo', 350),
-	   ('2025-05-01 23:30:00', 'Ranked Solo', 120),
-	   ('2025-05-03 14:30:00', 'Ranked Solo', 1000),
+       ('2025-05-01 15:30:00', 'Ranked Solo', 1200),
+       ('2025-05-01 16:30:00', 'Ranked Solo', 1300),
+       ('2025-05-01 18:15:00', 'Ranked Solo', 500),
+       ('2025-05-02 14:30:00', 'Ranked Solo', 4500),
+       ('2025-05-01 16:30:00', 'Ranked Solo', 2000),
+       ('2025-05-01 18:30:00', 'Ranked Solo', 350),
+       ('2025-05-01 23:30:00', 'Ranked Solo', 120),
+       ('2025-05-03 14:30:00', 'Ranked Solo', 1000),
        ('2025-05-01 16:00:00', 'Normal Draft', 200),
        ('2025-05-05 16:30:00', 'Normal Draft', 300),
        ('2025-05-07 16:48:00', 'Normal Draft', 400),
@@ -60,20 +60,21 @@ VALUES ('2025-05-01 14:30:00', 'Ranked Solo', 1000),
 
 INSERT INTO MatchParticipant (match_id, player_id, rank_awarded, win_loss, kills, deaths, assists)
 VALUES (1, 1, 105, 'Win', 10, 2, 8),
-       (1, 2, 110, 'Loss', 5, 5, 6),
+       (1, 2, 110, 'Loss', -5, 5, 6),
        (2, 3, 95, 'Win', 12, 1, 3),
-       (2, 4, 200, 'Loss', 4, 6, 5),
+       (2, 4, 200, 'Loss', -4, 6, 5),
        (3, 5, 260, 'Win', 9, 3, 7),
-       (3, 1, 106, 'Loss', 3, 4, 2),
+       (3, 1, 106, 'Loss', -3, 4, 2),
        (4, 2, 111, 'Win', 11, 2, 8),
-       (4, 3, 96, 'Loss', 2, 7, 4),
+       (4, 3, 96, 'Loss', -2, 7, 4),
        (5, 4, 202, 'Win', 13, 3, 9),
-       (5, 5, 262, 'Loss', 5, 5, 5),
-       (1, 6, 120, 'Win', 7, 3, 9),
-	   (2, 7, 90, 'Loss', 2, 8, 4),
-	   (3, 8, 130, 'Win', 11, 1, 6),
-	   (4, 9, 115, 'Loss', 4, 5, 7),
-	   (5, 10, 140, 'Win', 10, 2, 10);
+       (5, 5, 262, 'Loss', -5, 5, 5),
+       (6, 6, 120, 'Win', 7, 3, 9),
+       (6, 7, 90, 'Loss', -2, 8, 4),
+       (7, 8, 130, 'Win', 11, 1, 6),
+       (7, 9, 115, 'Loss', -4, 5, 7),
+       (8, 9, 140, 'Win', 10, 2, 10),
+       (8, 10, 140, 'Loss', -10, 2, 10);
 
 INSERT INTO ChampionsOwned (player_id, champion_name)
 VALUES (1, 'Ahri'),
