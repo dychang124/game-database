@@ -37,6 +37,8 @@ public class PlayerPanel extends UIPanel {
         this.add(levelLabel);
         refreshLevelLabel();
 
+
+
         playButton = new JButton("Play");
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

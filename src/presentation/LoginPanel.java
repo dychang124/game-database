@@ -63,8 +63,8 @@ public class LoginPanel extends UIPanel {
                 try {
                     GetPresentation().getDbc().insertPlayer(input);
                     p.setUsername(input);
-                    p.SwitchPanel(new PlayerPanel(p));
-
+                    JOptionPane.showMessageDialog(null, "Username "+ input +" has been registered.");
+                    username.setText("");
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(LoginPanel.this, "Registration failed", "Error", JOptionPane.ERROR_MESSAGE);
