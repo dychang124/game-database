@@ -59,7 +59,7 @@ public class LoginPanel extends UIPanel {
             public void actionPerformed(ActionEvent e) {
                 String input = username.getText();
                 try {
-                    getPresentation().getDbc().insertPlayer(input);
+                    p.getDbc().insertPlayer(input);
                     p.setUsername(input);
                     JOptionPane.showMessageDialog(null, "Username "+ input +" has been registered.");
                     username.setText("");

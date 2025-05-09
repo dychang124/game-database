@@ -37,6 +37,7 @@ public class DBConnection {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.executeUpdate();
+            conn.commit();
         }catch (Exception e){
             conn.rollback();
             throw e;
