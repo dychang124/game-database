@@ -8,7 +8,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
-public class ShopEntryPanel extends JPanel {//Part of shop window, to display champions that can be purchased
+/**
+ * UI element that represents a champion that can be purchased in shop
+ */
+public class ShopEntryPanel extends JPanel {
+
+    /**
+     * Constructs UI element that represents a champion that can be purchased in shop
+     * @param championName
+     * @param cost
+     * @param parent
+     */
     public ShopEntryPanel(String championName, int cost, ShopPanel parent) {
         super();
         this.setBackground(Color.gray);
@@ -25,6 +35,7 @@ public class ShopEntryPanel extends JPanel {//Part of shop window, to display ch
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    //Requests to purchase champion and update database
                     parent.getPresentation().getDbc().purchaseChampion(parent.getPresentation().getPlayer_id(), championName);
                     parent.RefreshShop();
                 } catch (SQLException ex) {

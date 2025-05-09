@@ -15,6 +15,9 @@ public class Presentation {
     private int player_id;
     private String username;
 
+    /**
+     * Holds JFrame for presentation and reference to DBConnection
+     */
     public Presentation(){
 
         dbc = new DBConnection();
@@ -30,6 +33,10 @@ public class Presentation {
         frame.setVisible(true);
     }
 
+    /**
+     * Switches panel displayed in frame
+     * @param uip
+     */
     public void SwitchPanel(UIPanel uip){
         cp.removeAll();
         cp.add(uip);

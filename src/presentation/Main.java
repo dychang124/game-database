@@ -7,7 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-
+/**
+ * Application entry point
+ */
 public class Main
 {
     public static void main( String[] args )

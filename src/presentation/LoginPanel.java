@@ -11,7 +11,11 @@ public class LoginPanel extends UIPanel {
     private JButton loginButton;
     private JButton registerButton;
 
-    public LoginPanel(Presentation p) {//Login page with login and register buttons
+    /**
+     * Constructs login page with login and register buttons
+     * @param p
+     */
+    public LoginPanel(Presentation p) {
         super(p);
 
         setLayout(new BorderLayout());
@@ -30,14 +34,18 @@ public class LoginPanel extends UIPanel {
         username.setToolTipText("Enter your username");
         formPanel.add(username);
 
+        //Format Login button
         loginButton = new JButton("Login");
         loginButton.setFont(new Font("Arial", Font.PLAIN, 18));
         loginButton.setPreferredSize(new Dimension(150, 50));
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+                //Attempt to login as username when button clicked
                 String input = username.getText();
                 int id = -1;
                 try {
+                    //Database query
                     id = getPresentation().getDbc().tryLogin(input);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(LoginPanel.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -52,13 +60,17 @@ public class LoginPanel extends UIPanel {
         });
         formPanel.add(loginButton);
 
+        //Format Register button
         registerButton = new JButton("Register");
         registerButton.setFont(new Font("Arial", Font.PLAIN, 18));
         registerButton.setPreferredSize(new Dimension(150, 50));
         registerButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+                //Attempt to register a new account as username when button clicked
                 String input = username.getText();
                 try {
+                    //Database query
                     p.getDbc().insertPlayer(input);
                     p.setUsername(input);
                     JOptionPane.showMessageDialog(null, "Username "+ input +" has been registered.");

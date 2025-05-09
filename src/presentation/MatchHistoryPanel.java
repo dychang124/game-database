@@ -15,7 +15,11 @@ public class MatchHistoryPanel extends UIPanel
     private ArrayList<JLabel> matchHistoryLabels;
     private JLabel parentPanel;
 
-    public MatchHistoryPanel(Presentation p) {//Window to display a user's match history
+    /**
+     * Constructs page to display a user's match history
+     * @param p
+     */
+    public MatchHistoryPanel(Presentation p) {
         super(p);
         this.setLayout(new BorderLayout());
         matchHistoryTitleLabel = new JLabel("Match History", SwingConstants.CENTER);
@@ -28,6 +32,7 @@ public class MatchHistoryPanel extends UIPanel
         JButton back = new JButton("Back");
         this.add(back, BorderLayout.SOUTH);
         back.addActionListener(new ActionListener() {
+            //Go to Player Panel when button clicked
             public void actionPerformed(ActionEvent e) {
                 p.SwitchPanel(new PlayerPanel(p));
             }
@@ -35,12 +40,10 @@ public class MatchHistoryPanel extends UIPanel
         SetMatchHistory();
     }
 
+    /**
+     * Updates UI to display a user's match history
+     */
     public void SetMatchHistory(){
-
-        while (matchHistoryLabels.size() > 0){
-            JLabel label = matchHistoryLabels.remove(0);
-            this.remove(label);
-        }
 
         JLabel temp = new JLabel();
         temp.setLayout(new GridLayout(1,6));
@@ -55,6 +58,7 @@ public class MatchHistoryPanel extends UIPanel
         matchHistoryLabels.add(temp);
 
         try {
+            //Queries for match history of current user
             ArrayList<MatchHistoryStruct> a = getPresentation().getDbc().getMatchHistory(getPresentation().getPlayer_id());
             for (int i = 0; i < a.size(); i++){
                 temp = new JLabel();

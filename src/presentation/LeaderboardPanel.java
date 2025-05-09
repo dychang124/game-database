@@ -13,6 +13,10 @@ public class LeaderboardPanel extends UIPanel
     private JLabel leaderboardTitleLabel;
     private JLabel parentPanel;
 
+    /**
+     * Constructs page that displays the current leaderboard rankings
+     * @param p
+     */
     public LeaderboardPanel(Presentation p) {
         super(p);
         this.setLayout(new BorderLayout());
@@ -26,6 +30,7 @@ public class LeaderboardPanel extends UIPanel
         JButton back = new JButton("Back");
         this.add(back, BorderLayout.SOUTH);
         back.addActionListener(new ActionListener() {
+            //Go to Player Panel when button clicked
             public void actionPerformed(ActionEvent e) {
                 p.SwitchPanel(new PlayerPanel(p));
             }
@@ -33,7 +38,10 @@ public class LeaderboardPanel extends UIPanel
         SetLeaderboard();
     }
 
-    public void SetLeaderboard(){//To display a leaderboard ranking of players based on rank points
+    /**
+     * Updates UI to display a leaderboard ranking of players
+     */
+    public void SetLeaderboard(){
 
         JLabel temp = new JLabel();
         temp.setLayout(new GridLayout(1,2));
@@ -42,6 +50,7 @@ public class LeaderboardPanel extends UIPanel
         parentPanel.add(temp);
 
         try {
+            //Queries for leaderboard data
             ArrayList<ArrayList<String>> a = getPresentation().getDbc().getLeaderboard();
             for (int i = 0; i < a.size() && i < 15; i++){
                 temp = new JLabel();

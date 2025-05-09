@@ -3,13 +3,16 @@ package application;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Connection where presentation layer interacts with application layer
+ */
 public class DBConnection {
     String url = "jdbc:mysql://localhost:3306/gamedb";
     String user = "user";
     String password = "password";
 
     public DBConnection() {
-        printPlayers();
+        //printPlayers();
     }
 
     /**
@@ -52,11 +55,18 @@ public class DBConnection {
         }
     }
 
-    public void deletePlayer(int playerID) throws SQLException, CustomException {//To delete a player from the database
+    /**
+     * Deletes specified player and related data from the database
+     * @param playerID
+     * @throws SQLException
+     * @throws CustomException
+     */
+    public void deletePlayer(int playerID) throws SQLException, CustomException {
         Connection conn = DriverManager.getConnection(url, user, password);
         try  {
             conn.setAutoCommit(false);
 
+            //Deletes player
             String deleteSQL = "DELETE FROM Player WHERE player_id = ?";
             PreparedStatement ps = conn.prepareStatement(deleteSQL);
             ps.setInt(1, playerID);
