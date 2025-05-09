@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 public class LoginPanel extends UIPanel {
     private JTextField username;
@@ -39,16 +38,15 @@ public class LoginPanel extends UIPanel {
                 String input = username.getText();
                 int id = -1;
                 try {
-                    id = GetPresentation().getDbc().tryLogin(input);
-                } catch (SQLException ex) {
+                    id = getPresentation().getDbc().tryLogin(input);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(LoginPanel.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 }
                 if (id != -1) {
                     p.setPlayer_id(id);
                     p.setUsername(input);
                     p.SwitchPanel(new PlayerPanel(p));
-                } else {
-                    JOptionPane.showMessageDialog(LoginPanel.this, "User not found", "Login Failed", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -61,11 +59,11 @@ public class LoginPanel extends UIPanel {
             public void actionPerformed(ActionEvent e) {
                 String input = username.getText();
                 try {
-                    GetPresentation().getDbc().insertPlayer(input);
+                    getPresentation().getDbc().insertPlayer(input);
                     p.setUsername(input);
                     JOptionPane.showMessageDialog(null, "Username "+ input +" has been registered.");
                     username.setText("");
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(LoginPanel.this, "Registration failed", "Error", JOptionPane.ERROR_MESSAGE);
                 }

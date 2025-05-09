@@ -44,7 +44,7 @@ public class OwnedChampionsPanel extends UIPanel{
         }
 
         try {
-            ArrayList<String> a = GetPresentation().getDbc().getOwnedChampions(GetPresentation().getPlayer_id());
+            ArrayList<String> a = getPresentation().getDbc().getOwnedChampions(getPresentation().getPlayer_id());
             for (int i = 0; i < a.size(); i++){
                 JLabel label = new JLabel(a.get(i));
                 listPanel.add(label);
