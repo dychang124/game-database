@@ -15,7 +15,7 @@ public class MatchHistoryPanel extends UIPanel
     private ArrayList<JLabel> matchHistoryLabels;
     private JLabel parentPanel;
 
-    public MatchHistoryPanel(Presentation p) {
+    public MatchHistoryPanel(Presentation p) {//Window to display a user's match history
         super(p);
         this.setLayout(new BorderLayout());
         matchHistoryTitleLabel = new JLabel("Match History", SwingConstants.CENTER);

@@ -33,7 +33,7 @@ public class LeaderboardPanel extends UIPanel
         SetLeaderboard();
     }
 
-    public void SetLeaderboard(){
+    public void SetLeaderboard(){//To display a leaderboard ranking of players based on rank points
 
         JLabel temp = new JLabel();
         temp.setLayout(new GridLayout(1,2));

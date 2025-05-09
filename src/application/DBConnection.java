@@ -12,7 +12,7 @@ public class DBConnection {
         printPlayers();
     }
 
-    public void insertPlayer(String username) throws SQLException, CustomException {
+    public void insertPlayer(String username) throws SQLException, CustomException {//To add a player to the database
 
         if (username.isEmpty()){
             throw new CustomException("Username too short");
@@ -44,7 +44,7 @@ public class DBConnection {
         }
     }
 
-    public void deletePlayer(int playerID) throws SQLException, CustomException {
+    public void deletePlayer(int playerID) throws SQLException, CustomException {//To delete a player from the database
         Connection conn = DriverManager.getConnection(url, user, password);
         try  {
             conn.setAutoCommit(false);
@@ -68,7 +68,7 @@ public class DBConnection {
     }
 
 
-    public int tryLogin(String username) throws SQLException, CustomException {
+    public int tryLogin(String username) throws SQLException, CustomException {//Attempt to login with given username
         int id = -1;
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "SELECT player_id FROM player WHERE username = ?";
@@ -107,7 +107,7 @@ public class DBConnection {
         }
     }
 
-    public ArrayList<String> getOwnedChampions(int id) throws SQLException {
+    public ArrayList<String> getOwnedChampions(int id) throws SQLException {//Query for owned champions of the given id
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT champion_name FROM ChampionsOwned WHERE player_id = " + id);
@@ -122,7 +122,7 @@ public class DBConnection {
         }
     }
 
-    public ArrayList<StringIntTuple> getUnOwnedChampions(int id) throws SQLException {
+    public ArrayList<StringIntTuple> getUnOwnedChampions(int id) throws SQLException {//Get unowned champions of the given id
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
 
             String sql = "SELECT c.champion_name, c.price FROM Champion c LEFT JOIN ChampionsOwned co ON c.champion_name = co.champion_name AND co.player_id = ? WHERE co.player_id IS NULL";
@@ -143,7 +143,7 @@ public class DBConnection {
         }
     }
 
-    public int getBlueEssence(int playerId) throws SQLException {
+    public int getBlueEssence(int playerId) throws SQLException {//Get the amount of blue essence a player has
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "SELECT blue_essence FROM Player WHERE player_id = " + playerId;
             PreparedStatement s = conn.prepareStatement(sql);
@@ -153,7 +153,7 @@ public class DBConnection {
         }
     }
 
-    public void purchaseChampion(int playerId, String championName) throws SQLException, CustomException {
+    public void purchaseChampion(int playerId, String championName) throws SQLException, CustomException {//attempt to purchase a champion from the shop
         Connection conn = DriverManager.getConnection(url, user, password);
         try {
             String selectQuery = """
@@ -197,7 +197,7 @@ public class DBConnection {
         }
     }
 
-    public void printPlayers() {
+    public void printPlayers() {//print out player info
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM player");
@@ -219,7 +219,7 @@ public class DBConnection {
         }
     }
 
-    public String playMatch(int playerId) throws SQLException {
+    public String playMatch(int playerId) throws SQLException {//simulates a game by generating random stats, and updating player information accordingly
         String output = null;
         Connection conn = DriverManager.getConnection(url, user, password);
         try {
@@ -300,7 +300,7 @@ public class DBConnection {
         }
     }
 
-    public ArrayList<MatchHistoryStruct> getMatchHistory(int playerId) throws SQLException {
+    public ArrayList<MatchHistoryStruct> getMatchHistory(int playerId) throws SQLException {//Get match history of a player
         ArrayList<MatchHistoryStruct> matchHistoryStructs = new ArrayList<>();
 
         String sql = """
@@ -341,7 +341,7 @@ public class DBConnection {
         }
     }
 
-    public int selectLevel(int playerId) throws SQLException {
+    public int selectLevel(int playerId) throws SQLException {//Get the level of a player
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "SELECT player_level FROM Player WHERE player_id = " + playerId;
             PreparedStatement s = conn.prepareStatement(sql);
@@ -351,7 +351,7 @@ public class DBConnection {
         }
     }
 
-    public String selectPlayerProfile(int playerId) throws SQLException{
+    public String selectPlayerProfile(int playerId) throws SQLException{//Get player information
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
             String sql = "SELECT player_level, player_rank, blue_essence FROM Player WHERE player_id = " + playerId;
             PreparedStatement s = conn.prepareStatement(sql);

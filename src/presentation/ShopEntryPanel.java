@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
-public class ShopEntryPanel extends JPanel {
+public class ShopEntryPanel extends JPanel {//Part of shop window, to display champions that can be purchased
     public ShopEntryPanel(String championName, int cost, ShopPanel parent) {
         super();
         this.setBackground(Color.gray);

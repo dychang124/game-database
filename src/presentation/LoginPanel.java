@@ -11,7 +11,7 @@ public class LoginPanel extends UIPanel {
     private JButton loginButton;
     private JButton registerButton;
 
-    public LoginPanel(Presentation p) {
+    public LoginPanel(Presentation p) {//Login page with login and register buttons
         super(p);
 
         setLayout(new BorderLayout());

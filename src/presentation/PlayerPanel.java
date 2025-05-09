@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.sql.SQLException;
 import java.awt.*;
 
-public class PlayerPanel extends UIPanel {
+public class PlayerPanel extends UIPanel {//The main window after login, with buttons to navigate to corresponding pages, as well as displays player information
 
     private JLabel usernameLabel;
     private JLabel profileLabel;

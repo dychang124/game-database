@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class OwnedChampionsPanel extends UIPanel{
+public class OwnedChampionsPanel extends UIPanel{//A window to display the champions a player owns
     private JLabel ocTitleLabel;
     private JPanel listPanel;
     private JButton backButton;

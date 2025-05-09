@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ShopPanel extends UIPanel{
+public class ShopPanel extends UIPanel{//Window to display shop of champions to be purchased
     private JLabel ocTitleLabel;
     private JLabel blueEssenceInventory;
     private JPanel listPanel;
