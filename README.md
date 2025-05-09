@@ -8,6 +8,6 @@ An IDE to run .java files
 
 Instructions:
 Ensure MySQL is open on jdbc:mysql://localhost:3306
-Initialize the database schema by running create_schema.sql in src/data
+Initialize the database schema by running create_schema.sql in MySQL, file located in src/data
 Load initial sample data with initialize_data.sql
 Run Main.java in src/presentation
