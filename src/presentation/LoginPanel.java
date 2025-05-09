@@ -76,8 +76,7 @@ public class LoginPanel extends UIPanel {
                     JOptionPane.showMessageDialog(null, "Username "+ input +" has been registered.");
                     username.setText("");
                 } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(LoginPanel.this, "Registration failed", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(LoginPanel.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
             }
