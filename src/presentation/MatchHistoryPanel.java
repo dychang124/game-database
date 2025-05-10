@@ -67,8 +67,8 @@ public class MatchHistoryPanel extends UIPanel
                 temp.add(new JLabel(a.get(i).wl, SwingConstants.CENTER));
                 temp.add(new JLabel(a.get(i).opponent, SwingConstants.CENTER));
                 temp.add(new JLabel(a.get(i).kills + "", SwingConstants.CENTER));
-                temp.add(new JLabel(a.get(i).kills + "", SwingConstants.CENTER));
-                temp.add(new JLabel(a.get(i).kills + "", SwingConstants.CENTER));
+                temp.add(new JLabel(a.get(i).deaths + "", SwingConstants.CENTER));
+                temp.add(new JLabel(a.get(i).assists + "", SwingConstants.CENTER));
                 temp.add(new JLabel(a.get(i).gameLength / 60 + ":" + a.get(i).gameLength % 60, SwingConstants.CENTER));
                 parentPanel.add(temp);
                 matchHistoryLabels.add(temp);
