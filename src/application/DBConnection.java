@@ -7,6 +7,8 @@ import java.util.ArrayList;
  * Connection where presentation layer interacts with application layer
  */
 public class DBConnection {
+
+    //MySQL connection parameters
     String url = "jdbc:mysql://localhost:3306/gamedb";
     String user = "user";
     String password = "password";
@@ -29,27 +31,36 @@ public class DBConnection {
             throw new CustomException("Username too long");
         }
 
+        //Connect to database
         Connection conn = DriverManager.getConnection(url, user, password);
         try {
+            //Begin transaction
             conn.setAutoCommit(false);
 
             //Checks if player with username already exists
+            //Prepare query
             String select = "SELECT player_id FROM player WHERE username = ?";
             PreparedStatement s = conn.prepareStatement(select);
             s.setString(1, username);
+            //Execute query
             ResultSet rs = s.executeQuery();
 
+            //Error handling
             if (rs.next()) {
                 throw new CustomException("Username already exists");
             }
 
             //Inserts player with username and default values into database
+            //Prepare query
             String sql = "INSERT INTO player (username) VALUES (?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
+            //Execute query
             stmt.executeUpdate();
+            //Commit transaction
             conn.commit();
         }catch (Exception e){
+            //Rollback transaction if it fails
             conn.rollback();
             throw e;
         }
@@ -81,7 +92,7 @@ public class DBConnection {
 
         } catch (Exception e) {
             conn.rollback();
-            throw e;  // Connection is still auto-closed
+            throw e;
         }
     }
 
