@@ -8,7 +8,7 @@ MySQL
 
 MySQL Java Connector
 
-An IDE to run .java files
+An IDE to run .java files, Java version 15 or higher
 
 <b>Instructions:</b>
 
